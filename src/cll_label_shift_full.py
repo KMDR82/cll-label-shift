@@ -103,7 +103,7 @@ import os, sys, json, time, glob, zlib, zipfile, math, warnings, platform
 import numpy as np
 warnings.filterwarnings('ignore')
 
-ROOT = '/kaggle/working' if os.path.isdir('/kaggle/working') else os.path.abspath('kbs_run')
+ROOT = '/kaggle/working' if os.path.isdir('/kaggle/working') else os.path.abspath('cll_run')
 DIRS = {k: os.path.join(ROOT, k) for k in ('dataset', 'model', 'output', 'fig', 'tables')}
 for d in DIRS.values(): os.makedirs(d, exist_ok=True)
 CACHE_DIR = os.path.join(DIRS['output'], 'cache')
@@ -1420,17 +1420,26 @@ fig, ax = plt.subplots(1, 3, figsize=(W, 2.3))
 for dname in EVAL:
     rr = [r for r in rows if r['dataset'] == dname]
     if not rr: continue
-    ra = [r for r in rr if r['in_panel_a']]
-    ax[0].loglog([r['smin_lemma'] for r in ra], [r['smin'] for r in ra], '.', ms=3, label=DATASET_SHORT[dname])
-    ax[1].plot([r['bias_thm'] for r in rr], [r['bias_naive'] for r in rr], '.', ms=3)
-    ax[2].loglog([r['pred_rmse_plain'] for r in rr], [r['err_plain_unproj'] for r in rr], '.', ms=3)
-for a_, lab in zip(ax, (('closed form (Lemma 2)', r'measured $\sigma_{\min}(\hat{\bar C})$'),
-                        ('prediction (Theorem 2)', 'measured naive bias'),
-                        ('prediction (Theorem 3)', 'measured plain CL-BBSE error'))):
+    ra = [r for r in rr if r['in_panel_a'] and r['rho'] == min(TWEAK_RHOS)]
+    if ra:
+        xi = EVAL.index(dname); jit = rng_for('jit', dname).uniform(-0.18, 0.18, len(ra))
+        ratio = [r['smin'] / r['smin_lemma'] for r in ra]
+        ax[0].plot(xi + jit, ratio, '.', ms=3, color=f'C{xi}')
+        ax[0].plot([xi - 0.3, xi + 0.3], [np.median(ratio)] * 2, 'k-', lw=1.0)
+    ax[1].plot([], [], '.', ms=3, color=f'C{EVAL.index(dname)}', label=DATASET_SHORT[dname])
+    col = f'C{EVAL.index(dname)}'
+    ax[1].plot([r['bias_thm'] for r in rr], [r['bias_naive'] for r in rr], '.', ms=3, color=col)
+    ax[2].loglog([r['pred_rmse_plain'] for r in rr], [r['err_plain_unproj'] for r in rr], '.', ms=3, color=col)
+ina = [d for d in EVAL if any(r['dataset'] == d and r['in_panel_a'] for r in rows)]
+ax[0].axhline(1.0, color='k', ls='--', lw=0.7); ax[0].set_ylim(0, 1.1)
+ax[0].set_xticks([EVAL.index(d) for d in ina]); ax[0].set_xticklabels([DATASET_SHORT[d] for d in ina], fontsize=6)
+ax[0].set_xlim(-0.6, max(EVAL.index(d) for d in ina) + 0.6)
+ax[0].set_xlabel('dataset'); ax[0].set_ylabel(r'measured / closed-form $\sigma_{\min}(\bar C)$')
+for a_, lab in zip(ax[1:], (('prediction (Theorem 2)', 'measured naive bias'),
+                            ('prediction (Theorem 3)', 'measured plain CL-BBSE error'))):
     lim = [min(a_.get_xlim()[0], a_.get_ylim()[0]), max(a_.get_xlim()[1], a_.get_ylim()[1])]
     a_.plot(lim, lim, 'k--', lw=0.7); a_.set_xlabel(lab[0]); a_.set_ylabel(lab[1])
-ax[0].legend(fontsize=5.5, markerscale=2, loc='upper left')
-for t_ in (ax[0].xaxis, ax[0].yaxis): plain_ticks(t_, [0.002, 0.004, 0.006, 0.01], '{:.3f}')
+ax[1].legend(fontsize=5.5, markerscale=2, loc='upper left')
 save_fig(fig, ax, 'Figure_2_theory', rows)
 
 # ---- Fig. 3: main comparison per dataset ----
