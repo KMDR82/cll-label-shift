@@ -22,7 +22,7 @@ importance weights of label shift can be estimated in that setting:
 | Path | Content |
 |---|---|
 | `notebooks/cll_label_shift_full.ipynb` | The complete study (Part A: training, Part B: evaluation, statistics, tables, figures). |
-| `notebooks/manuscript_figures.ipynb` | One cell that re-draws every figure of the paper from `results/`. |
+| `notebooks/manuscript_figures.ipynb` | Re-draws every figure of the paper from `results/`, one cell per figure. |
 | `src/cll_label_shift_full.py` | The same notebook in percent format (`# %%` cells); `to_ipynb.py` converts it. |
 | `src/fig_cell.py`, `src/regen_figures.py` | Figure code of the notebook and a command-line runner that uses only the CSV files. |
 | `src/redraw_s7.py` | Re-draws Figure S7 from the curves stored in `figures/supplementary/Figure_S7_iw_risk.csv`. |
