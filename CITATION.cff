@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Label shift under complementary-label supervision: code, results and figure data"
+version: 1.0.0
+date-released: 2026-10-29
+license: MIT
+repository-code: "https://github.com/KMDR82/cll-label-shift"
+authors:
+  - family-names: Akkaya
+    given-names: Ahmet
+    orcid: "https://orcid.org/0000-0003-4836-2310"
+    affiliation: "Department of Computer Technologies, Gönen Vocational School, Bandırma Onyedi Eylül University"
+keywords:
+  - complementary labels
+  - weak supervision
+  - label shift
+  - importance weighting
+  - class-prior estimation

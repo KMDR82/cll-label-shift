@@ -1,0 +1,5 @@
+dataset,seed,K,val_acc,rank,coverage,healthy
+cifar10_raw,0,10,0.265,10,10,True
+emnist_balanced,0,47,0.15611702127659574,47,47,True
+emnist_balanced,1,47,0.17413120567375887,46,46,False
+emnist_balanced,2,47,0.14824468085106382,47,47,True
