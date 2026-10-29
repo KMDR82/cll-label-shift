@@ -1,7 +1,7 @@
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
-kbs_run/
+cll_run/
 output/
 dataset/
 model/
