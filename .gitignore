@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+kbs_run/
+output/
+dataset/
+model/
+fig/
+figures_out/
+fig_manuscript/
+*.npz
+*.zip
